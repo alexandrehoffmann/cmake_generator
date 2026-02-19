@@ -46,6 +46,10 @@ def create_folders(config):
 		os.makedirs("tests", exist_ok=True)
 	if config.get("demos", default_build_demos):
 		os.makedirs("demos", exist_ok=True)
+	if "libraries" in config:
+		for library, library_data in config["libraries"].items():
+			os.makedirs(config.get("include_dir", default_src_dir) + "/" + library_data.get("folder", ""), exist_ok=True)
+			os.makedirs(config.get("src_dir", default_src_dir) + "/" + library_data.get("folder", ""), exist_ok=True)
 
 def write_header(fout, config):
 	fout.write(u'cmake_minimum_required(VERSION 3.20)\n')
