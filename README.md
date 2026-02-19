@@ -171,9 +171,10 @@ install:
   destination: bin           # Installation destination
 ```
 
-## Example
+## Examples
 
-See [example.yaml](example.yaml) for a complete example configuration.
+- [example.yaml](example.yaml) - Basic example with executable and library
+- [advanced_example.yaml](advanced_example.yaml) - Advanced example with multiple targets, dependencies, and complex configuration
 
 Generated CMakeLists.txt:
 

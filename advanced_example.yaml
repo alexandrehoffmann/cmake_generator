@@ -1,0 +1,101 @@
+project:
+  name: AdvancedProject
+  version: 2.1.0
+  description: Advanced example with multiple targets and dependencies
+  languages: [CXX, C]
+  cmake_minimum: 3.20
+
+compiler:
+  cpp_standard: 20
+  warnings: extra
+  flags:
+    - -O3
+    - -march=native
+
+sources:
+  src_dir: src
+  include_dir: include
+  patterns:
+    - "*.cpp"
+    - "*.hpp"
+    - "*.c"
+    - "*.h"
+
+dependencies:
+  - name: Boost
+    version: "1.75"
+    components:
+      - system
+      - filesystem
+      - thread
+    required: true
+    
+  - name: OpenSSL
+    version: "1.1"
+    required: true
+    
+  - name: GTest
+    required: false
+
+targets:
+  # Main application
+  - name: advanced_app
+    type: executable
+    sources:
+      - src/main.cpp
+      - src/network/server.cpp
+      - src/network/client.cpp
+    dependencies:
+      - Boost::system
+      - Boost::filesystem
+      - Boost::thread
+      - OpenSSL::SSL
+      - OpenSSL::Crypto
+      - app_core
+    include_dirs:
+      - src/network
+    compile_options:
+      - -DUSE_SSL
+      - -DENABLE_LOGGING
+    
+  # Core library
+  - name: app_core
+    type: library
+    library_type: static
+    sources:
+      - src/core/engine.cpp
+      - src/core/config.cpp
+      - src/core/utils.cpp
+    dependencies:
+      - Boost::system
+    cpp_standard: 20
+    
+  # Shared utility library
+  - name: app_utils
+    type: library
+    library_type: shared
+    sources:
+      - src/utils/logging.cpp
+      - src/utils/string_helpers.c
+    include_dirs:
+      - src/utils
+    
+  # Test executable (if GTest is available)
+  - name: app_tests
+    type: executable
+    sources:
+      - tests/main_test.cpp
+      - tests/core_test.cpp
+    dependencies:
+      - GTest::GTest
+      - GTest::Main
+      - app_core
+      - app_utils
+
+install:
+  targets:
+    - advanced_app
+    - app_core
+    - app_utils
+  headers_dir: include
+  destination: bin
