@@ -1,0 +1,44 @@
+project:
+  name: ExampleProject
+  version: 1.0.0
+  description: An example project using cmake_generator
+  languages: [CXX]
+  cmake_minimum: 3.15
+
+compiler:
+  cpp_standard: 17
+  warnings: extra
+
+sources:
+  src_dir: src
+  include_dir: include
+  patterns: 
+    - "*.cpp"
+    - "*.hpp"
+
+dependencies:
+  - name: Threads
+    required: true
+
+targets:
+  - name: example_app
+    type: executable
+    sources:
+      - src/main.cpp
+      - src/app.cpp
+    dependencies:
+      - Threads::Threads
+    
+  - name: example_lib
+    type: library
+    library_type: static
+    sources:
+      - src/lib.cpp
+    cpp_standard: 17
+
+install:
+  targets:
+    - example_app
+    - example_lib
+  headers_dir: include
+  destination: bin
